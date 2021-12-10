@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: personal_cv
+      MYSQL_USER: jvc
+      MYSQL_PASSWORD: jvc1984
+    ports:
+      - '4306:3306'
+    restart: always
+
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - ./src/themes:/var/www/html/wp-content/themes
+      - ./src/plugins:/var/www/html/wp-content/plugins
+      - ./src/uploads:/var/www/html/wp-content/uploads
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: jvc
+      WORDPRESS_DB_PASSWORD: jvc1984
+      WORDPRESS_DB_NAME: personal_cv
+      WORDPRESS_DB_PREFIX: jvc_
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+    restart: always
